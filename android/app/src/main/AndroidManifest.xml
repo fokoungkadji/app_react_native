@@ -23,5 +23,7 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+
+      <!-- Flutter Profile Activity will be added after AAR integration -->
     </application>
 </manifest>

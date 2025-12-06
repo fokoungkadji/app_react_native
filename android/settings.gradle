@@ -4,3 +4,8 @@ extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autoli
 rootProject.name = 'AzeooApp'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
+
+// Note: Flutter module integration disabled temporarily
+// To integrate Flutter module, you need to:
+// 1. Build Flutter module as AAR: cd azeoo_profile_sdk && flutter build aar
+// 2. Follow the instructions to add repository and dependencies
