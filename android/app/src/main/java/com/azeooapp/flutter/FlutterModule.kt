@@ -7,12 +7,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 
-/**
- * Module natif React Native pour intégrer le SDK Flutter
- *
- * Ce module expose des méthodes JavaScript permettant d'ouvrir
- * et de contrôler le module Flutter depuis React Native.
- */
 class FlutterModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
     companion object {
@@ -22,12 +16,6 @@ class FlutterModule(private val reactContext: ReactApplicationContext) : ReactCo
 
     override fun getName(): String = NAME
 
-    /**
-     * Ouvre la vue Flutter avec le profil de l'utilisateur spécifié
-     *
-     * @param userId L'identifiant de l'utilisateur à afficher
-     * @param promise Promise pour retourner le résultat à JavaScript
-     */
     @ReactMethod
     fun openFlutterView(userId: String, promise: Promise) {
         try {
@@ -37,7 +25,6 @@ class FlutterModule(private val reactContext: ReactApplicationContext) : ReactCo
                 return
             }
 
-            // Lancer l'activité Flutter
             val intent = Intent(activity, FlutterProfileActivity::class.java)
             intent.putExtra("user_id", userId)
             activity.startActivityForResult(intent, FLUTTER_ACTIVITY_REQUEST_CODE)
@@ -48,16 +35,9 @@ class FlutterModule(private val reactContext: ReactApplicationContext) : ReactCo
         }
     }
 
-    /**
-     * Met à jour l'userId et rafraîchit le profil Flutter
-     *
-     * @param userId Le nouvel identifiant utilisateur
-     * @param promise Promise pour retourner le résultat à JavaScript
-     */
     @ReactMethod
     fun updateUserId(userId: String, promise: Promise) {
         try {
-            // Envoyer un message au Flutter Engine via le Method Channel
             FlutterEngineManager.updateUserId(userId)
 
             promise.resolve("UserId updated to: $userId")
@@ -66,21 +46,11 @@ class FlutterModule(private val reactContext: ReactApplicationContext) : ReactCo
         }
     }
 
-    /**
-     * Récupère l'userId actuellement configuré
-     *
-     * @param promise Promise pour retourner le résultat à JavaScript
-     */
     @ReactMethod
     fun getCurrentUserId(promise: Promise) {
         promise.resolve(FlutterEngineManager.getCurrentUserId())
     }
 
-    /**
-     * Vérifie si Flutter est disponible
-     *
-     * @param promise Promise pour retourner le résultat à JavaScript
-     */
     @ReactMethod
     fun isFlutterReady(promise: Promise) {
         promise.resolve(FlutterEngineManager.getEngine() != null)

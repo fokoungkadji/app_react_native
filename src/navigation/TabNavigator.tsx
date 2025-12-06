@@ -7,7 +7,6 @@ import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
-// Icônes simples en texte (peut être remplacé par react-native-vector-icons)
 const TabIcon = ({name, focused}: {name: string; focused: boolean}) => {
   const icons: Record<string, string> = {
     UserId: '⚙️',
@@ -23,20 +22,12 @@ const TabIcon = ({name, focused}: {name: string; focused: boolean}) => {
   );
 };
 
-/**
- * Navigateur avec onglets
- *
- * Contient deux onglets :
- * - Onglet 1: Saisie de l'userId
- * - Onglet 2: Affichage du profil via Flutter SDK
- */
 const TabNavigator: React.FC = () => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   const handleUserIdSaved = useCallback((userId: string) => {
     setCurrentUserId(userId);
-    // Incrémenter le trigger pour forcer le rafraîchissement de l'onglet Profile
     setRefreshTrigger(prev => prev + 1);
   }, []);
 

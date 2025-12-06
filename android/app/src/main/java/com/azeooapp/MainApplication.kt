@@ -16,7 +16,6 @@ class MainApplication : Application(), ReactApplication {
       context = applicationContext,
       packageList =
         PackageList(this).packages.apply {
-          // Ajouter le package Flutter Module
           add(FlutterModulePackage())
         },
     )
@@ -26,7 +25,6 @@ class MainApplication : Application(), ReactApplication {
     super.onCreate()
     loadReactNative(this)
 
-    // Initialiser le FlutterEngine pour un démarrage rapide
     initializeFlutterEngine()
   }
 
@@ -34,7 +32,6 @@ class MainApplication : Application(), ReactApplication {
     try {
       FlutterEngineManager.initialize(this)
     } catch (e: Exception) {
-      // Log l'erreur mais ne pas crasher l'app
       android.util.Log.e("MainApplication", "Failed to initialize Flutter Engine: ${e.message}")
     }
   }

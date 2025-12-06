@@ -15,12 +15,6 @@ interface UserIdScreenProps {
   onUserIdSaved: (userId: string) => void;
 }
 
-/**
- * Écran de saisie de l'userId (Onglet 1)
- *
- * Permet à l'utilisateur d'entrer un userId qui sera sauvegardé
- * et utilisé pour afficher le profil dans l'onglet 2.
- */
 const UserIdScreen: React.FC<UserIdScreenProps> = ({onUserIdSaved}) => {
   const [userId, setUserId] = useState<string>('');
   const [savedUserId, setSavedUserId] = useState<string | null>(null);

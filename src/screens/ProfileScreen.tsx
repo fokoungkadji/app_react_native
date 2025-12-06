@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import {getUserId} from '../utils/storage';
 
-// Import du module natif Flutter (sera créé plus tard)
 const {FlutterModule} = NativeModules;
 
 interface ProfileScreenProps {
@@ -19,12 +18,6 @@ interface ProfileScreenProps {
   refreshTrigger: number;
 }
 
-/**
- * Écran d'affichage du profil (Onglet 2)
- *
- * Affiche le profil utilisateur via le SDK Flutter intégré.
- * Se rafraîchit automatiquement quand l'userId change.
- */
 const ProfileScreen: React.FC<ProfileScreenProps> = ({
   userId,
   refreshTrigger,
@@ -119,8 +112,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     );
   }
 
-  // Affichage temporaire avant l'intégration Flutter
-  // Cette section sera remplacée par le FlutterView
   return (
     <View style={styles.container}>
       <View style={styles.header}>
