@@ -72,6 +72,10 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+// Flutter AAR repository configuration
+String storageUrl = System.env.FLUTTER_STORAGE_BASE_URL ?: "https://storage.googleapis.com"
+def flutterAarPath = rootProject.projectDir.parentFile.parentFile.toPath().resolve("azeoo_profile_sdk/build/host/outputs/repo").toString()
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -107,6 +111,15 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url flutterAarPath
+    }
+    maven {
+        url "$storageUrl/download.flutter.io"
+    }
+}
+
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
@@ -117,6 +130,7 @@ dependencies {
         implementation jscFlavor
     }
 
-    // Flutter Module Integration (temporarily disabled)
-    // Implementation will be added after building Flutter AAR
+    // Flutter Module Integration via AAR
+    debugImplementation 'com.azeoo.azeoo_profile_sdk:flutter_debug:1.0'
+    releaseImplementation 'com.azeoo.azeoo_profile_sdk:flutter_release:1.0'
 }

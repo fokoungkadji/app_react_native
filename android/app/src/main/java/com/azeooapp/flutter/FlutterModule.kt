@@ -1,5 +1,7 @@
 package com.azeooapp.flutter
 
+import android.app.Activity
+import android.content.Intent
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -11,17 +13,11 @@ import com.facebook.react.bridge.Promise
  * Ce module expose des méthodes JavaScript permettant d'ouvrir
  * et de contrôler le module Flutter depuis React Native.
  */
-class FlutterModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class FlutterModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
     companion object {
         const val NAME = "FlutterModule"
         const val FLUTTER_ACTIVITY_REQUEST_CODE = 1001
-
-        // Variable pour stocker l'userId courant
-        var currentUserId: String = "1"
-
-        // Flag to indicate if Flutter is available
-        var isFlutterAvailable: Boolean = false
     }
 
     override fun getName(): String = NAME
@@ -34,15 +30,19 @@ class FlutterModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
      */
     @ReactMethod
     fun openFlutterView(userId: String, promise: Promise) {
-        if (!isFlutterAvailable) {
-            promise.reject("FLUTTER_NOT_AVAILABLE", "Flutter module is not yet integrated. Please build the Flutter AAR first.")
-            return
-        }
-
         try {
-            currentUserId = userId
-            // Flutter integration will be enabled after AAR is built
-            promise.resolve("Flutter view would open with userId: $userId")
+            val activity: Activity? = reactContext.currentActivity
+            if (activity == null) {
+                promise.reject("ERROR", "Activity not available")
+                return
+            }
+
+            // Lancer l'activité Flutter
+            val intent = Intent(activity, FlutterProfileActivity::class.java)
+            intent.putExtra("user_id", userId)
+            activity.startActivityForResult(intent, FLUTTER_ACTIVITY_REQUEST_CODE)
+
+            promise.resolve("Flutter view opened with userId: $userId")
         } catch (e: Exception) {
             promise.reject("ERROR", "Failed to open Flutter view: ${e.message}")
         }
@@ -57,7 +57,9 @@ class FlutterModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
     @ReactMethod
     fun updateUserId(userId: String, promise: Promise) {
         try {
-            currentUserId = userId
+            // Envoyer un message au Flutter Engine via le Method Channel
+            FlutterEngineManager.updateUserId(userId)
+
             promise.resolve("UserId updated to: $userId")
         } catch (e: Exception) {
             promise.reject("ERROR", "Failed to update userId: ${e.message}")
@@ -71,7 +73,7 @@ class FlutterModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
      */
     @ReactMethod
     fun getCurrentUserId(promise: Promise) {
-        promise.resolve(currentUserId)
+        promise.resolve(FlutterEngineManager.getCurrentUserId())
     }
 
     /**
@@ -81,6 +83,6 @@ class FlutterModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
      */
     @ReactMethod
     fun isFlutterReady(promise: Promise) {
-        promise.resolve(isFlutterAvailable)
+        promise.resolve(FlutterEngineManager.getEngine() != null)
     }
 }

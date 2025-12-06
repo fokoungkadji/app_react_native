@@ -7,6 +7,7 @@ import com.facebook.react.ReactHost
 import com.facebook.react.ReactNativeApplicationEntryPoint.loadReactNative
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.azeooapp.flutter.FlutterModulePackage
+import com.azeooapp.flutter.FlutterEngineManager
 
 class MainApplication : Application(), ReactApplication {
 
@@ -25,7 +26,16 @@ class MainApplication : Application(), ReactApplication {
     super.onCreate()
     loadReactNative(this)
 
-    // Flutter integration will be initialized after AAR is built
-    // initializeFlutterEngine()
+    // Initialiser le FlutterEngine pour un démarrage rapide
+    initializeFlutterEngine()
+  }
+
+  private fun initializeFlutterEngine() {
+    try {
+      FlutterEngineManager.initialize(this)
+    } catch (e: Exception) {
+      // Log l'erreur mais ne pas crasher l'app
+      android.util.Log.e("MainApplication", "Failed to initialize Flutter Engine: ${e.message}")
+    }
   }
 }
